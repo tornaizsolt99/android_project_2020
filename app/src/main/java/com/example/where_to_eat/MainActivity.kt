@@ -3,25 +3,27 @@ package com.example.where_to_eat
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import butterknife.BindView
-import butterknife.ButterKnife
+
+import com.example.where_to_eat.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
 class MainActivity : AppCompatActivity() {
-    @BindView(R.id.main_bottom_navigation) lateinit var navi: BottomNavigationView
+    private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        ButterKnife.bind(this)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
+
 
         var profileFragment= ProfileFragment()
         var restaurantFragment= RestaurantFragment()
         var favoritesFragment= FavoritesFragment()
 
 
-        var bottomNavigationView=findViewById<BottomNavigationView>(R.id.main_bottom_navigation)
-        navi.setOnNavigationItemSelectedListener {
+        //var bottomNavigationView=findViewById<BottomNavigationView>(R.id.main_bottom_navigation)
+        binding.mainBottomNavigation.setOnNavigationItemSelectedListener {
 
             when(it.itemId){
                 R.id.menu_item_profile -> replacefragment(profileFragment)

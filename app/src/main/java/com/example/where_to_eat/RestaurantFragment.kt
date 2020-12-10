@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.where_to_eat.databinding.FragmentRestaurantBinding
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -28,11 +30,35 @@ class RestaurantFragment : Fragment() {
             param2 = it.getString(ARG_PARAM2)
         }
     }
-
+    private var _binding: FragmentRestaurantBinding? = null
+    private val binding get() = _binding!!
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_restaurant, container, false)
+        _binding =  FragmentRestaurantBinding.inflate(inflater, container, false)
+        val view = binding.root
+        var restaurants= mutableListOf<Restaurants>()
+        for(i in 0..20){
+            restaurants.add(Restaurants(2,"33","valami","valahol","varos","h","valahol","123456","Romania","012345687", (3.1F),8F,5))
+        }
+
+        binding.restaurantRecyclerview.adapter = RestaurantsAdapter(restaurants)
+        binding.restaurantRecyclerview.layoutManager = LinearLayoutManager(context)
+        binding.restaurantRecyclerview.setHasFixedSize(true)
+
+
+
+
+
+
+
+        return view
+
+       // return inflater.inflate(R.layout.fragment_restaurant, container, false)
+    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {
