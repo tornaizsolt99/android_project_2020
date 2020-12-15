@@ -5,8 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.where_to_eat.databinding.FragmentRestaurantBinding
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -15,10 +13,10 @@ private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
- * Use the [RestaurantFragment.newInstance] factory method to
+ * Use the [FavoritesFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class RestaurantFragment : Fragment() {
+class FavoritesFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -30,35 +28,11 @@ class RestaurantFragment : Fragment() {
             param2 = it.getString(ARG_PARAM2)
         }
     }
-    private var _binding: FragmentRestaurantBinding? = null
-    private val binding get() = _binding!!
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        _binding =  FragmentRestaurantBinding.inflate(inflater, container, false)
-        val view = binding.root
-        var restaurants= mutableListOf<Restaurants>()
-        for(i in 0..20){
-            restaurants.add(Restaurants(2,"33","valami","valahol","varos","h","valahol","123456","Romania","012345687", (3.1F),8F,5))
-        }
-
-        binding.restaurantRecyclerview.adapter = RestaurantsAdapter(restaurants)
-        binding.restaurantRecyclerview.layoutManager = LinearLayoutManager(context)
-        binding.restaurantRecyclerview.setHasFixedSize(true)
-
-
-
-
-
-
-
-        return view
-
-       // return inflater.inflate(R.layout.fragment_restaurant, container, false)
-    }
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+        return inflater.inflate(R.layout.fragment_favorites, container, false)
     }
 
     companion object {
@@ -68,12 +42,12 @@ class RestaurantFragment : Fragment() {
          *
          * @param param1 Parameter 1.
          * @param param2 Parameter 2.
-         * @return A new instance of fragment RestaurantFragment.
+         * @return A new instance of fragment FavoritesFragment.
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-                RestaurantFragment().apply {
+                FavoritesFragment().apply {
                     arguments = Bundle().apply {
                         putString(ARG_PARAM1, param1)
                         putString(ARG_PARAM2, param2)
