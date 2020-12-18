@@ -1,12 +1,25 @@
 package com.example.where_to_eat
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.where_to_eat.databinding.FragmentRestaurantBinding
+import com.google.gson.Gson
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.launch
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -37,14 +50,43 @@ class RestaurantFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding =  FragmentRestaurantBinding.inflate(inflater, container, false)
         val view = binding.root
-        var restaurants= mutableListOf<Restaurants>()
-        for(i in 0..20){
-            restaurants.add(Restaurants(2,"33","valami","valahol","varos","h","valahol","123456","Romania","012345687", (3.1F),8F,5))
+       // val apiResponse=ApiClient.getInstance().fetchAllRestaurants().execute().body()
+        val clientt=OkHttpClient()
+
+        val request= Request.Builder().url("https://ratpark-api.imok.space/restaurants?country=US&page=1").build()
+        CoroutineScope(Dispatchers.IO).launch {
+            try{
+                val response =clientt.newCall(request).execute()
+                val gson=Gson()
+                 val apiResponse:RestaurantsList =gson.fromJson(response.body()?.charStream(),RestaurantsList::class.java)
+                 Log.d("zsolt", "oksii ")
+                Log.d("zsolt","naa ${apiResponse.per_page} ${apiResponse.total_entries} ${apiResponse.restaurants[1].name}")
+               // binding.textView.text= apiResponse.restaurant[0].name
+                activity?.runOnUiThread {
+                    binding.restaurantRecyclerview.adapter = RestaurantsAdapter(apiResponse.restaurants)
+                    binding.restaurantRecyclerview.layoutManager = LinearLayoutManager(context)
+                    binding.restaurantRecyclerview.setHasFixedSize(true)
+                }
+            }
+            catch (e:Exception){
+
+                Log.d("zsolt",e.toString() )
+
+            }
         }
 
-        binding.restaurantRecyclerview.adapter = RestaurantsAdapter(restaurants)
-        binding.restaurantRecyclerview.layoutManager = LinearLayoutManager(context)
-        binding.restaurantRecyclerview.setHasFixedSize(true)
+
+
+           // Log.d("zsolt","okee ${restaurantsResponse!!.restaurant[0].name }")
+
+
+        var restaurants= mutableListOf<Restaurants>()
+
+        for(i in 0..20){
+            //restaurants.add(restaurantsResponse!!.restaurant[i])
+        }
+
+
 
 
 
