@@ -6,7 +6,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class RestaurantsAdapter(private val restaurants: MutableList<Restaurants>) : RecyclerView.Adapter<RestaurantsAdapter.ViewHolder>() {
+class RestaurantsAdapter(private val restaurants:
+                         List<Restaurants>) : RecyclerView.Adapter<RestaurantsAdapter.ViewHolder>() {
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
         val nameView: TextView = itemView.findViewById(R.id.item_restaurants_name)
         val locationView: TextView = itemView.findViewById(R.id.item_restaurants_location)
