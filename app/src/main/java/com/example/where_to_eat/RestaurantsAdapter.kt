@@ -1,10 +1,13 @@
 package com.example.where_to_eat
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.example.where_to_eat.fragments.DetailsFragment
 
 class RestaurantsAdapter(private val restaurants:
                          List<Restaurants>) : RecyclerView.Adapter<RestaurantsAdapter.ViewHolder>() {
@@ -26,7 +29,19 @@ class RestaurantsAdapter(private val restaurants:
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.nameView.text=restaurants[position].name
         holder.locationView.text=restaurants[position].city
-        holder.priceView.text= restaurants[position].price.toString()
+        holder.priceView.text= "Price: ${restaurants[position].price.toString()}"
+
+        holder.itemView.setOnClickListener{
+            val detailsFragment= DetailsFragment()
+            val bundle=Bundle()
+            bundle.putInt("id",restaurants[position].id)
+            detailsFragment.arguments=bundle
+            val activity: AppCompatActivity=it.context as AppCompatActivity
+            activity.supportFragmentManager.beginTransaction().apply{
+                replace(R.id.activity_frame,detailsFragment)
+                commit()
+            }
+        }
     }
 
 }
