@@ -1,4 +1,4 @@
-package com.example.where_to_eat
+package com.example.where_to_eat.fragments
 
 import android.os.Bundle
 import android.util.Log
@@ -7,19 +7,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.where_to_eat.RestaurantsAdapter
+import com.example.where_to_eat.RestaurantsList
 import com.example.where_to_eat.databinding.FragmentRestaurantBinding
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -58,7 +54,7 @@ class RestaurantFragment : Fragment() {
             try{
                 val response =clientt.newCall(request).execute()
                 val gson=Gson()
-                 val apiResponse:RestaurantsList =gson.fromJson(response.body()?.charStream(),RestaurantsList::class.java)
+                 val apiResponse: RestaurantsList =gson.fromJson(response.body()?.charStream(), RestaurantsList::class.java)
                  Log.d("zsolt", "oksii ")
                 Log.d("zsolt","naa ${apiResponse.per_page} ${apiResponse.total_entries} ${apiResponse.restaurants[1].name}")
                // binding.textView.text= apiResponse.restaurant[0].name
@@ -77,14 +73,12 @@ class RestaurantFragment : Fragment() {
 
 
 
-           // Log.d("zsolt","okee ${restaurantsResponse!!.restaurant[0].name }")
 
 
-        var restaurants= mutableListOf<Restaurants>()
 
-        for(i in 0..20){
-            //restaurants.add(restaurantsResponse!!.restaurant[i])
-        }
+
+
+
 
 
 

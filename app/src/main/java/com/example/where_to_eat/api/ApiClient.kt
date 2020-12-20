@@ -1,4 +1,4 @@
-package com.example.where_to_eat
+package com.example.where_to_eat.api
 
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -12,9 +12,9 @@ object ApiClient {
         val client= OkHttpClient()
         val retrofit= Retrofit.Builder().baseUrl("https://ratpark-api.imok.space/")
                 .addConverterFactory(GsonConverterFactory.create()).client(client).build()
-        apiService=retrofit.create(ApiService::class.java)
+        apiService =retrofit.create(ApiService::class.java)
     }
-    fun getInstance():ApiService{
+    fun getInstance(): ApiService {
         return apiService
     }
 

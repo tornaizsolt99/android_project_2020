@@ -1,5 +1,6 @@
-package com.example.where_to_eat
+package com.example.where_to_eat.api
 
+import com.example.where_to_eat.RestaurantsList
 import retrofit2.Call
 import retrofit2.http.GET
 
