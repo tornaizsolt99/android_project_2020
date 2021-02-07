@@ -79,16 +79,12 @@
 
         </LinearLayout>
 
-        <Button
+        <ImageButton
             android:id="@+id/favorite"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
-            app:icon="@drawable/ic_baseline_favorite_border_24"
-            android:text="Favorite"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
             app:layout_constraintEnd_toEndOf="@id/details_text_layout"
-            app:layout_constraintTop_toTopOf="@id/details_text_layout"
             app:layout_constraintBottom_toBottomOf="@id/details_text_layout"/>
 
         <Button

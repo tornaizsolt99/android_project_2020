@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import com.example.where_to_eat.R
@@ -17,6 +18,8 @@ import com.example.where_to_eat.Restaurants
 import com.example.where_to_eat.api.ApiClient
 import com.example.where_to_eat.databinding.FragmentDetailsBinding
 import com.example.where_to_eat.databinding.FragmentRestaurantBinding
+import com.example.where_to_eat.room.restaurant.RestaurantDatabase
+import com.example.where_to_eat.room.restaurant.RestaurantRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -37,6 +40,7 @@ class DetailsFragment : Fragment() {
     private lateinit var callButton: Button
     private lateinit var mapButton: Button
     private lateinit var geo: String
+    private lateinit var favouriteButton: ImageButton
 
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -51,6 +55,7 @@ class DetailsFragment : Fragment() {
         phoneView=binding.phone
         callButton=binding.call
         mapButton=binding.maps
+        favouriteButton=binding.favorite
 
         val extras=arguments
         if (extras != null) {
@@ -69,6 +74,50 @@ class DetailsFragment : Fragment() {
             intent.setPackage("com.google.android.apps.maps")
             startActivity(intent)
         }
+        val restaurantDao= RestaurantDatabase.getDatabase(requireContext()).restaurantDao()
+
+        favouriteButton.setOnClickListener {
+            if(favouriteButton.tag=="border"){
+                favouriteButton.tag="favourite"
+                favouriteButton.setBackgroundResource(R.drawable.ic_baseline_favourite_24)
+                CoroutineScope(Dispatchers.IO).launch {
+                    try {
+                        val item= ApiClient.getInstance().getRestaurant(extras?.get("id") as Int).execute().body()
+
+                        if (item != null) {
+                            RestaurantRepository(restaurantDao).addRestaurant(item)
+                            Log.d("zsolt","hozzaadva")
+                        }
+                        else{
+                            Log.d("zsolt","hibaa")
+                        }
+
+                    }catch(e: Exception){
+                        Log.d("zsolt",e.toString())
+                    }
+                }
+            }
+            else{
+                favouriteButton.tag="border"
+                favouriteButton.setBackgroundResource(R.drawable.ic_baseline_favorite_border_24)
+                CoroutineScope(Dispatchers.IO).launch {
+                    try {
+                        val item= ApiClient.getInstance().getRestaurant(extras?.get("id") as Int).execute().body()
+
+                        if (item != null) {
+                            RestaurantRepository(restaurantDao).deleteFavouriteRestaurant(item)
+                            Log.d("zsolt","hozzaadva")
+                        }
+                        else{
+                            Log.d("zsolt","hibaa")
+                        }
+
+                    }catch(e: Exception){
+                        Log.d("zsolt",e.toString())
+                    }
+                }
+            }
+        }
 
 
 
@@ -81,20 +130,36 @@ class DetailsFragment : Fragment() {
             try{
             val restaurant= ApiClient.getInstance().getRestaurant(id).execute().body()
             if (restaurant != null) {
-                setRestaurant(restaurant)
+                val restaurantDao= RestaurantDatabase.getDatabase(requireContext()).restaurantDao()
+                val favouriteRestaurants=RestaurantRepository(restaurantDao).getFavouriteRestaurants()
+                var favourite=false
+                for (i in favouriteRestaurants){
+                    if(i.id == restaurant.id){
+                    favourite=true
+                    }
+                }
+                setRestaurant(restaurant,favourite)
             }
         } catch (e: Exception){
             Log.d("zsolt",e.toString())
         }
     }
 }
-fun setRestaurant(restaurant: Restaurants){
+fun setRestaurant(restaurant: Restaurants,favourite:Boolean){
     activity?.runOnUiThread {
         nameView.text=restaurant.name
         locationView.text= "${restaurant.country} , ${restaurant.state}, ${restaurant.city}, ${restaurant.address}"
         priceView.text= "Price: ${restaurant.price}"
         phoneView.text="Tel.: ${restaurant.phone}"
         geo="${restaurant.lat},${restaurant.lng}"
+        if(favourite){
+            favouriteButton.tag="favourite"
+            favouriteButton.setBackgroundResource(R.drawable.ic_baseline_favourite_24)
+        }
+        else{
+            favouriteButton.setBackgroundResource(R.drawable.ic_baseline_favorite_border_24)
+            favouriteButton.tag="border"
+        }
     }
     }
 

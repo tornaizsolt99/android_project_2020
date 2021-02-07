@@ -7,11 +7,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.where_to_eat.Restaurants
+import com.example.where_to_eat.RestaurantsAdapter
 import com.example.where_to_eat.databinding.FragmentProfileBinding
-import com.example.where_to_eat.databinding.FragmentRestaurantBinding
 import com.example.where_to_eat.room.Profile
 import com.example.where_to_eat.room.ProfileDatabase
 import com.example.where_to_eat.room.ProfileRepository
+import com.example.where_to_eat.room.restaurant.RestaurantDatabase
+import com.example.where_to_eat.room.restaurant.RestaurantRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -44,11 +48,11 @@ class ProfileFragment : Fragment() {
         //mProfileViewModel=ViewModelProvider(this).get(ProfileViewModel::class.java)
 
         val mProfiledao = ProfileDatabase.getDatabase(requireContext()).profileDao()
-
+        val mRestaurantDao= RestaurantDatabase.getDatabase(requireContext()).restaurantDao()
         //mProfileViewModel.addProfile(profile)
         CoroutineScope(Dispatchers.IO).launch{
             try {
-                val profile = ProfileRepository(mProfiledao).getProfile(0)
+                val profile = ProfileRepository(mProfiledao).getProfile(1)
                 if(profile == null) {
                     val profilee=Profile(0,"Tornai Zsolt","Zetelaka","0758485835","zsoltika991001@gmail.com")
                     Log.d("zsolt", "null ")
@@ -59,6 +63,8 @@ class ProfileFragment : Fragment() {
                     Log.d("zsolt", "oksii ${profile.name}")
                     setProfile(profile)
                 }
+                val favouriteRestaurants=RestaurantRepository(mRestaurantDao).getFavouriteRestaurants()
+                setFavouriteRestaurants(favouriteRestaurants)
 
             }
             catch (e: Exception){
@@ -78,6 +84,13 @@ class ProfileFragment : Fragment() {
             addressTtext.text=profile.adress
             phoneText.text=profile.phone
             emailText.text=profile.email
+        }
+    }
+    private fun setFavouriteRestaurants(favourites: List<Restaurants>){
+        activity?.runOnUiThread {
+            binding.favouritesRecyclerView.adapter = RestaurantsAdapter(favourites)
+            binding.favouritesRecyclerView.layoutManager = LinearLayoutManager(context)
+            binding.favouritesRecyclerView.setHasFixedSize(true)
         }
     }
 
