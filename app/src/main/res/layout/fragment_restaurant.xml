@@ -15,7 +15,7 @@
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Restaurans"
+            android:text="Restaurants"
             android:textColor="@color/purple_200"
 
             android:textSize="32dp"
